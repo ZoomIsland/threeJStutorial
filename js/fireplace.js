@@ -21,7 +21,7 @@ function main() {
 
   // light
   {
-    const light = new THREE.DirectionalLight(0xffffff, 1);
+    const light = new THREE.DirectionalLight(0xffffff, .75);
   light.position.set(-20, 20, 30);
   scene.add(light);
   light.castShadow = true;
@@ -33,8 +33,8 @@ function main() {
   light.shadow.camera.right = d;
   light.shadow.camera.top = d;
   light.shadow.camera.bottom = -d;
-  light.shadow.camera.near = 1;
-  light.shadow.camera.far = 50;
+  light.shadow.camera.near = 0.1;
+  light.shadow.camera.far = 500;
   light.shadow.bias = 0.001;
   }
 
@@ -43,6 +43,10 @@ function main() {
   const pillarMaterial = new THREE.MeshPhongMaterial({ color: 0x6688AA });
   const backgroundMaterial = new THREE.MeshPhongMaterial({ color: 0x6688AA });
   const wallMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 });
+  const greenStocking = new THREE.MeshPhongMaterial({color: "green"});
+  const redStocking = new THREE.MeshPhongMaterial({color: "red"});
+  const purpleStocking = new THREE.MeshPhongMaterial({color: "rebeccapurple"});
+  const orangeStocking = new THREE.MeshPhongMaterial({color: "orange"});
 
   //floor
   const groundGeometry = new THREE.PlaneBufferGeometry(50, 50);
@@ -81,6 +85,16 @@ function main() {
   mantleMesh.position.y = 16;
   mantleMesh.castShadow = true;
   fireplace.add(mantleMesh);
+  // base
+  const baseWidth = 30;
+  const baseHeight = 1;
+  const baseDepth = 10;
+  const baseGeo = new THREE.BoxBufferGeometry(baseWidth, baseHeight, baseDepth);
+  const baseMesh = new THREE.Mesh(baseGeo, pillarMaterial);
+  baseMesh.position.z = -5.01;
+  baseMesh.position.y = .5;
+  baseMesh.receiveShadow = true;
+  fireplace.add(baseMesh);
   // fireplace background
   const fpBackgroundHeight = 20;
   const fpBackgroundWidth = 24;
@@ -109,16 +123,15 @@ function main() {
   fireplace.add(fpLeftMesh);
   fireplace.add(fpRightMesh);
 
+  
+  
+  
   // stockings
   const shape = new THREE.Shape();
-  const x = 0;
-  const y = 0;
-  shape.moveTo(x, -2); // cp 0, 0
+  shape.moveTo(0, -2); // cp 0, 0
   shape.lineTo(0, 4);
-  shape.moveTo(0, 4); // cp 0, 4
   shape.bezierCurveTo(.5, 5, 1.5, 6, 2, 6); // cp 2, 6
   shape.lineTo(4, 6);
-  shape.moveTo(4, 6); // cp 4, 6
   shape.bezierCurveTo(4.5, 6, 5.5, 5, 6, 4);
   shape.bezierCurveTo(6, 3.5, 5, 2.5, 4, 2);
   shape.lineTo(4, -2);
@@ -132,37 +145,116 @@ function main() {
     bevelSegments: 2
   }
   const stockingGeo = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-  const stockingMaterial = new THREE.MeshPhongMaterial({color: "green"});
-  const stockingOne = new THREE.Mesh(stockingGeo, stockingMaterial);
-  const stockingTwo = new THREE.Mesh(stockingGeo, stockingMaterial);
-  const stockingThree = new THREE.Mesh(stockingGeo, stockingMaterial);
-  const stockingFour = new THREE.Mesh(stockingGeo, stockingMaterial);
+  const stockingOne = new THREE.Mesh(stockingGeo, greenStocking);
+  const stockingTwo = new THREE.Mesh(stockingGeo, redStocking);
+  const stockingThree = new THREE.Mesh(stockingGeo, purpleStocking);
+  const stockingFour = new THREE.Mesh(stockingGeo, orangeStocking);
   stockingOne.scale.set(.7, .7, .7);
   stockingOne.rotation.z = Math.PI * 1.1;
   stockingOne.position.y = 14;
   stockingOne.position.z = 4;
   stockingOne.position.x = -2;
+  stockingOne.castShadow = true;
   stockingTwo.scale.set(.7, .7, .7);
   stockingTwo.rotation.z = Math.PI * 1.15;
   stockingTwo.position.y = 14;
   stockingTwo.position.z = 4;
   stockingTwo.position.x = -9;
+  stockingTwo.castShadow = true;
   stockingThree.scale.set(.7, .7, .7);
   stockingThree.rotation.z = Math.PI * 1.07;
   stockingThree.position.y = 14;
   stockingThree.position.z = 4;
   stockingThree.position.x = 5;
+  stockingThree.castShadow = true;
   stockingFour.scale.set(.7, .7, .7);
   stockingFour.rotation.z = Math.PI * 1.12;
   stockingFour.position.y = 14;
   stockingFour.position.z = 4;
   stockingFour.position.x = 11;
+  stockingFour.castShadow = true;
   fireplace.add(stockingOne);
   fireplace.add(stockingTwo);
   fireplace.add(stockingThree);
   fireplace.add(stockingFour);
+  
+  // fire
+  const fire = new THREE.Object3D();
+  fire.position.y = 2;
+  fire.position.z = -5;
+  fireplace.add(fire);
+  // logs
+  const logRadius = 1;
+  const logHeight = 10;
+  const logRadialSegments = 12;
+  const logGeo = new THREE.CylinderBufferGeometry(logRadius, logRadius, logHeight, logRadialSegments);
+  const logMaterial = new THREE.MeshPhongMaterial({color: "brown"});
+  const logOne = new THREE.Mesh(logGeo, logMaterial);
+  const logTwo = new THREE.Mesh(logGeo, logMaterial);
+  const logThree = new THREE.Mesh(logGeo, logMaterial);
+  logOne.rotation.z = Math.PI * .5;
+  logTwo.rotation.z = Math.PI * .5;
+  logThree.rotation.z = Math.PI * .5;
+  logTwo.position.z = -2;
+  logThree.position.z = -1;
+  logThree.position.y = 1.6666;
+  logOne.castShadow = true;
+  logTwo.castShadow = true;
+  logThree.castShadow = true;
+  fire.add(logOne);
+  fire.add(logTwo);
+  fire.add(logThree);
+  // flames
+  const flameShape = new THREE.Shape();
+  flameShape.moveTo(0, 0);
+  flameShape.bezierCurveTo(-.5, 0, -2, 1.5, -2, 2);
+  flameShape.lineTo(-2, 4);
+  flameShape.bezierCurveTo(-1.5, 4.5, -1, 5.5, -1, 6);
+  flameShape.bezierCurveTo(-1, 7, -1.5, 8, -1.5, 8);
+  flameShape.lineTo(-.5, 7);
+  flameShape.bezierCurveTo(-.5, 6.5, -1, 5.5, -1, 5);
+  flameShape.bezierCurveTo(-1, 4.2, 0, 4.2, 0, 4);
+  flameShape.bezierCurveTo(.5, 4, 1, 2, 1, 2);
+  flameShape.bezierCurveTo(1, 1.2, .8, .8, 0, 0);
+  const flameExtrusion = {
+    steps: 1,
+    depth: 1,
+    bevelEnabled: true,
+    bevelThickness: 2,
+    bevelSize: 2,
+    bevelSegments: 10
+  }
+  const flameGeo = new THREE.ExtrudeBufferGeometry(flameShape, flameExtrusion);
+  const flameMaterial = new THREE.MeshPhongMaterial({color: "red", emissive: "red"});
+  const yellowFlame = new THREE.MeshPhongMaterial({color: "yellow", emissive: "yellow"});
+  const flameMesh = new THREE.Mesh(flameGeo, flameMaterial);
+  const tinyFlame = new THREE.Mesh(flameGeo, yellowFlame);
+  flameMesh.scale.set(.5,.5,.5);
+  flameMesh.position.y = 1.5;
+  flameMesh.position.x = -.2;
+  tinyFlame.scale.set(.2,.2,.2);
+  tinyFlame.position.y = 1.5;
+  tinyFlame.position.z = 1;
+  fire.add(flameMesh);
+  fire.add(tinyFlame);
+  //fire light
+  const fireLight = new THREE.DirectionalLight("red", 1);
+  fireLight.position.set(0, 0, 0);
+  fireLight.target = stockingTwo;
+  fireLight.shadow.mapSize.width = 2048;
+  fireLight.shadow.mapSize.height = 2048;
 
-
+  const d = 50;
+  fireLight.shadow.camera.left = -d;
+  fireLight.shadow.camera.right = d;
+  fireLight.shadow.camera.top = d;
+  fireLight.shadow.camera.bottom = -d;
+  fireLight.shadow.camera.near = 0.1;
+  fireLight.shadow.camera.far = 500;
+  fireLight.shadow.bias = 0.001;
+  fireLight.castShadow = true;
+  fire.add(fireLight);
+  
   // walls
   const wall = new THREE.Object3D();
   scene.add(wall);
@@ -177,7 +269,9 @@ function main() {
   wallMeshLeft.position.y = 12;
   wallMeshRight.position.y = 12;
   wallMeshLeft.receiveShadow = true;
+  wallMeshLeft.castShadow = true;
   wallMeshRight.receiveShadow = true;
+  wallMeshRight.castShadow = true;
   wall.add(wallMeshLeft);
   wall.add(wallMeshRight);
   // wall above
@@ -187,6 +281,7 @@ function main() {
   const wallMeshUpper = new THREE.Mesh(wallUpperGeo, wallMaterial);
   wallMeshUpper.position.y = 20;
   wallMeshUpper.receiveShadow = true;
+  wallMeshUpper.castShadow = true;
   wall.add(wallMeshUpper);
 
 
