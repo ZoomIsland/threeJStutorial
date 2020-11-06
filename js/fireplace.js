@@ -5,14 +5,14 @@ function main() {
   renderer.shadowMap.enabled = true;
 
   // camera
-  const fov = 40;
+  const fov = 75;
   const aspect = 2;
   const zNear = 0.1;
-  const zFar = 1000;
+  const zFar = 500;
   const camera = new THREE.PerspectiveCamera(fov, aspect, zNear, zFar);
 
-  camera.position.set(0, 10, 25).multiplyScalar(3);
-  camera.lookAt(0,0,0);
+  camera.position.set(0, 15, 25).multiplyScalar(3);
+  camera.lookAt(0,12,0);
 
   controls = new THREE.OrbitControls (camera, renderer.domElement);
   controls.update();
@@ -95,13 +95,13 @@ function main() {
   fpBackMesh.receiveShadow = true;
   fpLeftMesh.position.x = -12;
   fpLeftMesh.position.y = 10;
-  fpLeftMesh.position.z = -5;
+  fpLeftMesh.position.z = -6;
   fpLeftMesh.rotation.y = Math.PI * .5;
   fpLeftMesh.castShadow = true;
   fpLeftMesh.receiveShadow = true;
   fpRightMesh.position.x = 12;
   fpRightMesh.position.y = 10;
-  fpRightMesh.position.z = -5;
+  fpRightMesh.position.z = -6;
   fpRightMesh.rotation.y = Math.PI * -.5;
   fpRightMesh.castShadow = true;
   fpRightMesh.receiveShadow = true;
@@ -109,6 +109,58 @@ function main() {
   fireplace.add(fpLeftMesh);
   fireplace.add(fpRightMesh);
 
+  // stockings
+  const shape = new THREE.Shape();
+  const x = 0;
+  const y = 0;
+  shape.moveTo(x, -2); // cp 0, 0
+  shape.lineTo(0, 4);
+  shape.moveTo(0, 4); // cp 0, 4
+  shape.bezierCurveTo(.5, 5, 1.5, 6, 2, 6); // cp 2, 6
+  shape.lineTo(4, 6);
+  shape.moveTo(4, 6); // cp 4, 6
+  shape.bezierCurveTo(4.5, 6, 5.5, 5, 6, 4);
+  shape.bezierCurveTo(6, 3.5, 5, 2.5, 4, 2);
+  shape.lineTo(4, -2);
+  shape.lineTo(0, -2);
+  const extrudeSettings = {
+    steps: 1,
+    depth: 2,
+    bevelEnabled: true,
+    bevelThickness: 0.33,
+    bevelSize: .75,
+    bevelSegments: 2
+  }
+  const stockingGeo = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+  const stockingMaterial = new THREE.MeshPhongMaterial({color: "green"});
+  const stockingOne = new THREE.Mesh(stockingGeo, stockingMaterial);
+  const stockingTwo = new THREE.Mesh(stockingGeo, stockingMaterial);
+  const stockingThree = new THREE.Mesh(stockingGeo, stockingMaterial);
+  const stockingFour = new THREE.Mesh(stockingGeo, stockingMaterial);
+  stockingOne.scale.set(.7, .7, .7);
+  stockingOne.rotation.z = Math.PI * 1.1;
+  stockingOne.position.y = 14;
+  stockingOne.position.z = 4;
+  stockingOne.position.x = -2;
+  stockingTwo.scale.set(.7, .7, .7);
+  stockingTwo.rotation.z = Math.PI * 1.15;
+  stockingTwo.position.y = 14;
+  stockingTwo.position.z = 4;
+  stockingTwo.position.x = -9;
+  stockingThree.scale.set(.7, .7, .7);
+  stockingThree.rotation.z = Math.PI * 1.07;
+  stockingThree.position.y = 14;
+  stockingThree.position.z = 4;
+  stockingThree.position.x = 5;
+  stockingFour.scale.set(.7, .7, .7);
+  stockingFour.rotation.z = Math.PI * 1.12;
+  stockingFour.position.y = 14;
+  stockingFour.position.z = 4;
+  stockingFour.position.x = 11;
+  fireplace.add(stockingOne);
+  fireplace.add(stockingTwo);
+  fireplace.add(stockingThree);
+  fireplace.add(stockingFour);
 
 
   // walls
@@ -134,6 +186,7 @@ function main() {
   const wallUpperGeo = new THREE.PlaneBufferGeometry(wallUpperWidth, wallUpperHeight);
   const wallMeshUpper = new THREE.Mesh(wallUpperGeo, wallMaterial);
   wallMeshUpper.position.y = 20;
+  wallMeshUpper.receiveShadow = true;
   wall.add(wallMeshUpper);
 
 
