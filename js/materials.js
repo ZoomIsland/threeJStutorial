@@ -17,23 +17,6 @@ function main() {
   const scene = new THREE.Scene();
 
   {
-    const light = new THREE.DirectionalLight(0xfffffff, 1);
-    light.position.set(0,20,0);
-    scene.add(light);
-    light.castShadow = true;
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
-
-    const d = 50;
-    light.shadow.camera.left = -d;
-    light.shadow.camera.right = d;
-    light.shadow.camera.top = d;
-    light.shadow.camera.bottom = -d;
-    light.shadow.camera.near = 1;
-    light.shadow.camera.far = 50;
-    light.shadow.bias = 0.001;
-  }
-  {
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(1,2,4);
     scene.add(light);
@@ -42,7 +25,9 @@ function main() {
 
   function makeSphere(row, column, color) {
     const sphereGeometry = new THREE.SphereBufferGeometry( 5, 32, 32);
-    const material = new THREE.MeshPhongMaterial({ color: color });
+    // const material = new THREE.MeshPhongMaterial({ color: color });
+    const material = new THREE.MeshToonMaterial({ color: color });
+    material.shininess = 30;
     const sphere = new THREE.Mesh( sphereGeometry, material );
     function rowColumnGen(row) {
       if (row === 0) {

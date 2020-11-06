@@ -15,3 +15,8 @@ html, body {
   top: 1em;
   left: 1em;
 }
+
+.camera-x-slider {
+  position: absolute;
+  bottom: 1em;
+}
